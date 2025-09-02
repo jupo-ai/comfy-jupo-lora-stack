@@ -115,7 +115,7 @@ class JupoLoRAStack:
         stack, trigger = get_stack(unique_id, extra_pnginfo)
 
         stack = prev_stack + stack
-        trigger = trigger + prev_trigger
+        trigger = prev_trigger + trigger
         
         return (stack, trigger)
 
