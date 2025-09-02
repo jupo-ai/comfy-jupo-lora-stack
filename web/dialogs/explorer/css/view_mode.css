@@ -1,0 +1,35 @@
+/* === 表示モード切り替えコンテナ === */
+.jupo-file-explorer-view-mode-container {
+    display: flex;
+    background-color: #2d3748;
+    border-radius: 6px;
+    padding: 4px;
+}
+
+/* === 表示モード切り替えボタン === */
+.jupo-file-explorer-view-mode-button {
+    background: transparent;
+    border: none;
+    color: #a0aec0;
+    padding: 6px 10px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.jupo-file-explorer-view-mode-button:hover {
+    background-color: #4a5568;
+    color: #e2e8f0;
+}
+
+/* === アクティブな表示モード === */
+.jupo-file-explorer-active-view {
+    background-color: #68d391;
+    color: #1a202c;
+}
+
+.jupo-file-explorer-active-view:hover {
+    background-color: #86e0a8;
+    color: #1a202c;
+}

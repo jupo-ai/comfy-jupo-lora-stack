@@ -1,0 +1,64 @@
+/*
+=================================================
+Model Info Dialog
+=================================================
+*/
+
+/* --- 全体コンテナ this.container --- */
+.jupo-info-dialog-container {
+    width: 60vw;
+    max-width: 1400px;
+}
+
+
+/* --- ヘッダー --- */
+
+.jupo-info-dialog-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid #2d3748;
+    background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+    flex-shrink: 0;
+    gap: 8px;
+}
+
+.jupo-info-dialog-header-title {
+    color: #e2e8f0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.jupo-info-dialog-header-status {
+    font-size: 14px;
+    color: #68d391;
+    opacity: 0.9;
+}
+
+
+/* --- リンク --- */
+.jupo-info-dialog-link {
+    color: #68d391;
+    transition: color 0.2s ease;
+    text-decoration: none;
+}
+
+
+/* === 各セクション =================================== */
+
+/* --- upper container: left + rigth */
+.jupo-info-dialog-upper-container {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    padding: 16px;
+}
+
+.jupo-info-dialog-left-container, 
+.jupo-info-dialog-right-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1;
+}

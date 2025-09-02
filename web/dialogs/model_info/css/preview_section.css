@@ -1,0 +1,111 @@
+/*
+=================================================
+Preview Section - Refined Design
+=================================================
+*/
+
+/* --- 全体コンテナ --- */
+.jupo-preview-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: #1a202c; /* 背景色を統一 */
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.jupo-preview-section-media-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 300px;
+    background: #2d3748;
+    border-radius: 8px;
+    overflow: hidden; /* 中身がはみ出ないように */
+}
+
+
+/* --- メディア要素 --- */
+.jupo-preview-section-media {
+    max-width: 100%;
+    max-height: 450px; /* ちょい大きく表示できるように */
+    object-fit: contain;
+}
+
+.jupo-preview-section-media--video {
+    background: #000;
+}
+
+.jupo-preview-section-media--audio {
+    width: 90%;
+    max-width: 350px;
+}
+
+
+
+/* --- プレビューなし --- */
+.jupo-preview-section-empty {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    color: #718096; /* 色をちょい薄く */
+    font-size: 16px;
+    text-align: center;
+    border: 2px dashed #4a5568; /* 点線で囲った */
+    border-radius: 8px;
+    box-sizing: border-box; /* paddingがサイズに影響しないように */
+}
+
+.jupo-preview-section-empty::before {
+    content: "🖼️";
+    font-size: 64px; /* アイコンを大きく */
+    margin-bottom: 16px;
+    opacity: 0.4;
+}
+
+
+/* --- アクションボタン --- */
+.jupo-preview-section-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 12px;
+    gap: 12px;
+    border-top: 1px solid #2d3748; /* 区切り線 */
+}
+
+/* ボタンの共通スタイル */
+.jupo-preview-section-upload-button,
+.jupo-preview-section-delete-button {
+    background: #4a5568;
+    color: #e2e8f0;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700; /* 太くして目立たせる */
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease-in-out;
+}
+
+.jupo-preview-section-upload-button:hover,
+.jupo-preview-section-delete-button:hover {
+    color: #1a202c; /* 文字色を濃くして読みやすく */
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* 浮き上がる感じ */
+}
+
+/* 個別のホバー色 */
+.jupo-preview-section-upload-button:hover {
+    background: #68d391; /* 明るい緑 */
+}
+
+.jupo-preview-section-delete-button:hover {
+    background: #e53e3e; /* 明るい赤 */
+}

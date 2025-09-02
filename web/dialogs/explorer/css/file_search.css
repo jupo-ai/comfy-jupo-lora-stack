@@ -1,0 +1,79 @@
+/* === 検索コンテナ === */
+.jupo-file-explorer-search-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+}
+
+/* === 検索入力 === */
+.jupo-file-explorer-search-input {
+    background-color: #2d3748;
+    border: 1px solid #4a5568;
+    color: #e2e8f0;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 14px;
+    width: 250px;
+    transition: all 0.2s ease;
+}
+
+.jupo-file-explorer-search-input:focus {
+    outline: none;
+    border-color: #68d391;
+    box-shadow: 0 0 0 2px rgba(104, 211, 145, 0.3);
+}
+
+/* === クリアボタン === */
+.jupo-file-explorer-search-clear-button {
+    background: #4a5568;
+    border: none;
+    color: #e2e8f0;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.jupo-file-explorer-search-clear-button:hover {
+    background-color: #a0aec0;
+    color: #1a202c;
+}
+
+/* === 検索結果情報 === */
+.jupo-file-explorer-search-info {
+    font-size: 12px;
+    color: #a0aec0;
+    position: absolute;
+    right: 0;
+    top: 40px;
+    background: #1a202c;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+/* === 検索結果のディレクトリヘッダー === */
+.jupo-file-explorer-search-directory-header {
+    font-weight: bold;
+    color: #a0aec0;
+    padding: 16px 8px 8px 8px;
+    border-bottom: 1px solid #4a5568;
+    margin-bottom: 8px;
+}
+
+/* === 検索結果グリッドコンテナ (Grid View) === */
+.jupo-file-explorer-search-results-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 24px;
+}
+
+/* === ハイライト === */
+mark {
+    background-color: #eeb764;
+    color: #1a202c;
+    padding: 1px 0;
+    border-radius: 2px;
+}

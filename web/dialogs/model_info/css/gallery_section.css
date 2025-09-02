@@ -1,0 +1,150 @@
+/*
+=================================================
+Gallery Section - Refined Design
+=================================================
+*/
+
+/* --- 全体コンテナ --- */
+.jupo-gallery-section {
+    display: flex;
+    flex-direction: column;
+    background: #1a202c; /* 背景色を統一 */
+    padding: 24px;
+    border-radius: 12px;
+    gap: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* --- ヘッダー --- */
+.jupo-gallery-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #2d3748;
+}
+
+.jupo-gallery-section-header-title {
+    color: #68d391;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.jupo-gallery-section-header-counter {
+    color: #e2e8f0;
+    font-size: 13px;
+    font-weight: 600;
+    background: #2d3748; /* 背景色を変更 */
+    padding: 6px 14px;
+    border-radius: 20px;
+}
+
+
+/* --- ギャラリーグリッド --- */
+.jupo-gallery-section-grid {
+    display: grid;
+    /* ↓ここを変更！アイテム幅120pxで自動フィルするようにした */
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 16px;
+    padding: 8px; /* スクロールバーとの余白 */
+    max-height: 400px; /* 高すぎ防止 */
+    overflow-y: auto;
+}
+
+/* --- ギャラリーアイテム --- */
+.jupo-gallery-section-item {
+    position: relative;
+    aspect-ratio: 2/3;
+    border-radius: 8px; /* 角丸調整 */
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    background: #2d3748; /* 画像読み込み中の背景 */
+}
+
+.jupo-gallery-section-item:hover {
+    transform: translateY(-5px) scale(1.05); /* 動きをちょい大きく */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); /* 影を濃く */
+}
+
+.jupo-gallery-section-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.jupo-gallery-section-item:hover .jupo-gallery-section-media {
+    transform: scale(1.1);
+}
+
+
+/* --- アクションボタン --- */
+.jupo-gallery-section-actions {
+    position: absolute;
+    top: 0; /* 配置を上に変更 */
+    right: 0;
+    display: flex;
+    padding: 8px;
+    gap: 6px;
+    width: 100%;
+    justify-content: flex-end; /* 右寄せ */
+    z-index: 2; /* メディアより上 */
+}
+
+.jupo-gallery-section-action-button {
+    background: rgba(26, 32, 44, 0.7); /* 背景色を濃く */
+    color: white;
+    border-radius: 50%;
+    width: 28px; /* サイズアップ */
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0;
+    transform: translateY(-10px); /* 上から出てくる感じ */
+}
+
+.jupo-gallery-section-item:hover .jupo-gallery-section-action-button {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.jupo-gallery-section-action-button:hover {
+    background: #68d391;
+    color: #1a202c;
+    transform: scale(1.1);
+}
+
+
+/* --- 空のギャラリー --- */
+.jupo-gallery-section-empty {
+    grid-column: 1 / -1; /* グリッド全体に広げる */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    min-height: 200px; /* 最低限の高さを確保 */
+    color: #718096;
+    font-size: 14px;
+    text-align: center;
+    background: transparent; /* 背景を透明に */
+    border-radius: 12px;
+    border: 2px dashed #4a5568; /* 枠線を濃く */
+}
+
+.jupo-gallery-section-empty::before {
+    content: "🎨";
+    font-size: 56px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}

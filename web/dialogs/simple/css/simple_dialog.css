@@ -1,0 +1,32 @@
+/*
+=================================================
+Simple Dialog
+=================================================
+*/
+
+/* --- 全体コンテナ ---*/
+.jupo-simple-dialog-container {
+    max-width: 50vw;
+}
+
+/* --- コンテンツ --- */
+
+.jupo-simple-dialog-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1; 
+    padding-top: 40px; /* 閉じるボタン領域確保 */
+}
+
+.jupo-simple-dialog-content {
+    background-color: #1a202c;
+    padding: 16px;
+    border-radius: 6px;
+    font-family: "SF Mono", "Consolas", "Courier New", monospace;
+    font-size: 14px;
+    white-space: pre-wrap; /* JSONを整形して表示 */
+    word-break: break-all; /* 長い文字列で改行 */
+}
+
+
