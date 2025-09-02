@@ -30,3 +30,7 @@ LoRAをスタック形式で読み込みます
 - LoRAを右クリック -> `表示名を設定`
 - 自由に表示名を設定できます
 - 日本語も使えます
+
+### Stack to WanWrapper
+- stackをKijai氏のWanVideo Wrapperのlora形式に変換するノードです
+- blockなどは全部にまとめて設定することになります
