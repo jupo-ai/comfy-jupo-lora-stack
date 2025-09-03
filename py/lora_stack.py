@@ -57,8 +57,10 @@ def get_stack(unique_id=None, extra_pnginfo=None):
         stack = lora_list
         
         for lora in lora_list:
+            enabled = lora.get("enabled", False)
+            enable_trigger = lora.get("enabled_trigger", False)
             trigger_value = lora.get("trigger", "")
-            if trigger_value.strip():
+            if enabled and enable_trigger and trigger_value.strip():
                 trigger += trigger_value
     
     return (stack, trigger)
