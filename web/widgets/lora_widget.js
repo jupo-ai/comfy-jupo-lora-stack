@@ -17,8 +17,12 @@ export class PowerLoRACompoundWidget extends BaseWidget {
         super(name, "lora");
         this.haveMouseMovedNumber = false;
         this.haveMouseMovedClipNumber = false;
-        this.deleteCallback = options.deleteCallback;
+        //this.deleteCallback = options.deleteCallback;
         
+        // 【修正点 ①】options から deleteCallback を分離する
+        const { deleteCallback, ...valueOptions } = options;
+        this.deleteCallback = deleteCallback; // シリアライズされないインスタンスプロパティとして保持
+
         this._value = {
             enabled: true,
             lora: "None",
@@ -28,7 +32,7 @@ export class PowerLoRACompoundWidget extends BaseWidget {
             enabled_trigger: false, 
             trigger: "",
             display_name: null,
-            ...options
+            ...valueOptions // deleteCallback を除いた残りのオプションをマージ
         };
         
         this.setupHitAreas();
