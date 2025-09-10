@@ -1,10 +1,8 @@
 from comfy.comfy_types import IO
 from .utils import Field
+from .lora_block_weight import LBWLoRALoader
 
-from nodes import LoraLoader
 import folder_paths
-import comfy.utils
-import comfy.lora
 
 import os
 from pathlib import Path
@@ -65,8 +63,8 @@ def apply_stack(stack, model, clip=None):
         strength_clip = value.get("strength_clip", 1)
         clip_mode = value.get("clip_mode", False)
         
-        enabled_lbw = value.get("enabled_lbw", False)
-        lbw = value.get("lbw", [])
+        enabled_lbw = value.get("enabled_block", False)
+        lbw = value.get("block", {})
         
         if not enabled: continue
         if not file or file == "None": continue
@@ -77,7 +75,17 @@ def apply_stack(stack, model, clip=None):
         if clip is None:
             strength_clip = 0
         
-        model, clip = LoraLoader().load_lora(model, clip, file, strength_model, strength_clip)
+        if not enabled_lbw:
+            lbw = {}
+        
+        model, clip = LBWLoRALoader().load_lora(
+            model, 
+            clip, 
+            file, 
+            strength_model, 
+            strength_clip, 
+            lbw
+        )
 
     return (model, clip)
 
@@ -204,6 +212,9 @@ class StackToWanWrapper:
             enabled = value.get("enabled", False)
             file = value.get("lora", "")
             strength_model = value.get("strength_model", 1)
+            enabled_block = value.get("enabled_block", False)
+            model_type = value.get("model_type", None)
+            block_info = value.get("block", {}).get("model", {})
 
             if not enabled: continue
             if not file or file == "None": continue
@@ -219,6 +230,9 @@ class StackToWanWrapper:
                     "low_mem_load": low_mem_load, 
                     "merge_loras": merge_loras
                 }
+                if enabled_block and model_type == "WAN" and block_info:
+                    wrapper_lora["blocks"] = block_info
+                    wrapper_lora["layer_filter"] = ""
 
                 loras_list.append(wrapper_lora)
         

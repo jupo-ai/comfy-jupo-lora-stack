@@ -1,11 +1,9 @@
 import { app } from "../../../scripts/app.js";
-import { api } from "../../../scripts/api.js";
-import { $el } from "../../../scripts/ui.js";
-import { mk_name, mk_endpoint, api_get, api_post, loadCSS } from "../utils.js";
 
 import { CONSTANTS, Utils, Renderer } from "../ui.js";
 import { BaseWidget } from "./base_widget.js";
 import { LoRAInfoDialog } from "../dialogs/lora_info_dialog.js";
+import { LoRABlockWeightDialog } from "../dialogs/lora_block_weight_dialog.js";
 
 
 // ==============================================
@@ -17,22 +15,28 @@ export class PowerLoRACompoundWidget extends BaseWidget {
         super(name, "lora");
         this.haveMouseMovedNumber = false;
         this.haveMouseMovedClipNumber = false;
-        //this.deleteCallback = options.deleteCallback;
         
-        // 【修正点 ①】options から deleteCallback を分離する
         const { deleteCallback, ...valueOptions } = options;
-        this.deleteCallback = deleteCallback; // シリアライズされないインスタンスプロパティとして保持
+        this.deleteCallback = deleteCallback;
 
         this._value = {
             enabled: true,
             lora: "None",
+            display_name: null,
+
             strength_model: 1.0,
+
             clip_mode: false,
             strength_clip: 1.0,
+
             enabled_trigger: false, 
             trigger: "",
-            display_name: null,
-            ...valueOptions // deleteCallback を除いた残りのオプションをマージ
+
+            enabled_block: false, 
+            model_type: null, 
+            block: null, 
+
+            ...valueOptions
         };
         
         this.setupHitAreas();
@@ -107,8 +111,16 @@ export class PowerLoRACompoundWidget extends BaseWidget {
         const menuOptions = [
             {
                 content: "ℹ️ 情報を開く", 
-                callback: () => {
+                callback: async () => {
                     const dialog = new LoRAInfoDialog(this);
+                    await dialog.show();
+                }
+            }, 
+            {
+                content: `📊 LBWを開く`, 
+                callback: () => {
+                    // LBWダイアログを開く
+                    const dialog = new LoRABlockWeightDialog(this);
                     dialog.show();
                 }
             }, 
@@ -271,8 +283,25 @@ export class PowerLoRACompoundWidget extends BaseWidget {
         const showFullPath = node.loraDisplayMode === 'full';
         const displayName = Utils.formatDisplayName(this.value.lora, showFullPath, this.value.display_name);
         const trimmedName = Utils.fitString(ctx, displayName, loraNameWidth - padding);
-        ctx.fillStyle = this.value.enabled ? "#e2e8f0" : "#718096";
-        ctx.fillText(trimmedName, currentX + padding/2, posY + pillHeight / 2);
+
+        // 有効な機能によってプレフィックス追加 / 文字色変更
+        let textColor = "#e2e8f0";
+        let prefix = "";
+        if (this.value.enabled_trigger) {
+            prefix += "📄";
+            textColor = "#f6ad55";
+        }
+        if (this.value.enabled_block) {
+            prefix += "📊";
+            textColor = "#f6ad55";
+        }
+        // ウィジェット自体が無効の場合
+        if (!this.value.enabled) {
+            textColor = "#718096";
+        }
+        
+        ctx.fillStyle = textColor;
+        ctx.fillText(prefix + " " + trimmedName, currentX + padding/2, posY + pillHeight / 2);
         
         this.hitAreas.loraName.bounds = [currentX, posY, loraNameWidth, pillHeight];
         currentX += loraNameWidth + padding;
@@ -292,7 +321,6 @@ export class PowerLoRACompoundWidget extends BaseWidget {
             this.hitAreas.clipStrengthRight.bounds = clipStrengthBounds.rightArrow;
             currentX += strengthControlWidth + padding;
         } else {
-            // ★★★ 追加 ★★★
             // 個別設定じゃないときは、当たり判定をリセットしてゴーストクリックを防ぐ
             this.hitAreas.clipStrengthLeft.bounds = [-1, -1, 0, 0];
             this.hitAreas.clipStrengthNumber.bounds = [-1, -1, 0, 0];
