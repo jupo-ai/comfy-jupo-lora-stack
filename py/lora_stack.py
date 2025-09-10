@@ -195,7 +195,6 @@ class StackToWanWrapper:
                 "stack": ("LORASTACK", {}), 
             }, 
             "optional": {
-                "blocks": ("SELECTEDBLOCKS", {}), 
                 "low_mem_load": Field.boolean(default=False), 
                 "merge_loras": Field.boolean(default=True), 
             }
@@ -204,7 +203,7 @@ class StackToWanWrapper:
     RETURN_TYPES = ("WANVIDLORA", )
     FUNCTION = "execute"
 
-    def execute(self, stack: list, blocks={}, low_mem_load=False, merge_loras=True):
+    def execute(self, stack: list, low_mem_load=False, merge_loras=True):
         loras_list = []
         available_loras = get_available_loras(stack)
 
@@ -225,14 +224,13 @@ class StackToWanWrapper:
                     "path": folder_paths.get_full_path("loras", file), 
                     "strength": strength_model, 
                     "name": os.path.splitext(file)[0], 
-                    "blocks": blocks.get("selected_blocks", {}), 
-                    "layer_filter": blocks.get("layer_filter", ""), 
+                    "blocks": {}, 
+                    "layer_filter": "", 
                     "low_mem_load": low_mem_load, 
                     "merge_loras": merge_loras
                 }
                 if enabled_block and model_type == "WAN" and block_info:
                     wrapper_lora["blocks"] = block_info
-                    wrapper_lora["layer_filter"] = ""
 
                 loras_list.append(wrapper_lora)
         
