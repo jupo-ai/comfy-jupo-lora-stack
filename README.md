@@ -33,4 +33,15 @@ LoRAをスタック形式で読み込みます
 
 ### Stack to WanWrapper
 - stackをKijai氏のWanVideo Wrapperのlora形式に変換するノードです
-- blockなどは全部にまとめて設定することになります
+- ~~blockなどは全部にまとめて設定することになります~~ LBWで設定できるようになりました
+
+### LoRA Block Weight
+- LoRA右クリック -> `LBWを開く`を選択するとLBW設定用のGUIが表示されます
+- モデルタイプは`SD`, `FLUX`, `WAN`をとりあえず用意してあります
+- ブロックはフルブロック相当で記載してあります(Lycoris等とUIを統合するため)
+- BIMO構文が使えます
+- FLUX, WANはU-netではないのでinput, ouputがあるわけではないですが、UIの都合上、ブロックをU-netのように左右に分けています
+
+### スケジュール(start, end)
+- 上記LBW画面からスケジュールを設定できます
+- start, endをそれぞれ 0 ~ 1 の範囲で設定します
