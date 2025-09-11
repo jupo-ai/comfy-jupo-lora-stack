@@ -102,7 +102,6 @@ const extension = {
             
             this.clearAllWidgets();
             
-            // 表示モードとClip設定モードを復元
             this.loraDisplayMode = data.lora_display_mode || 'filename';
             this.clipSettingMode = data.clip_setting_mode || 'common';
             
@@ -110,8 +109,8 @@ const extension = {
             
             if (data.lora_list && Array.isArray(data.lora_list)) {
                 data.lora_list.forEach(widgetData => {
-                    const widget = this.addLoRAWidget(widgetData.lora);
-                    widget.value = widgetData;
+                    const widget = this.addLoRAWidget(widgetData.lora); 
+                    widget.value = widgetData; // 保存されていた値で上書き
                 });
             }
 

@@ -1,4 +1,5 @@
 from .py.utils import mk_name, un_name, set_default_category
+from .py import endpoints # noqa: F401
 from .py import lora_stack
 
 NODE_CLASS_MAPPINGS = {
