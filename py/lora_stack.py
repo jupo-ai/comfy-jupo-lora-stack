@@ -1,9 +1,12 @@
 from comfy.comfy_types import IO
 from .utils import Field
 from .lora_block_weight import LBWLoRALoader
+from nodes import LoraLoader
 
 import folder_paths
-
+from comfy.model_patcher import ModelPatcher
+from comfy.sd import CLIP
+import comfy.hooks
 import os
 from pathlib import Path
 
@@ -53,8 +56,9 @@ def get_stack(unique_id=None, extra_pnginfo=None) -> tuple[list[dict], dict]:
     return (stack, trigger)
 
 
-def apply_stack(stack, model, clip=None):
+def apply_stack(stack, model: ModelPatcher, clip: CLIP):
     available_loras = get_available_loras(stack)
+    prev_hooks = None
         
     for value in available_loras:
         enabled = value.get("enabled", False)
@@ -65,6 +69,9 @@ def apply_stack(stack, model, clip=None):
         
         enabled_lbw = value.get("enabled_block", False)
         lbw = value.get("block", {})
+        
+        start = max(0, value.get("start", 0))
+        end = min(value.get("end", 1), 1)
         
         if not enabled: continue
         if not file or file == "None": continue
@@ -78,14 +85,47 @@ def apply_stack(stack, model, clip=None):
         if not enabled_lbw:
             lbw = {}
         
-        model, clip = LBWLoRALoader().load_lora(
-            model, 
-            clip, 
-            file, 
-            strength_model, 
-            strength_clip, 
-            lbw
-        )
+        
+        if start > 0 or end < 1:
+            prev_hooks = LBWLoRALoader().load_lora_with_hook(
+                model, 
+                clip, 
+                file, 
+                strength_model, 
+                strength_clip, 
+                lbw, 
+                start, 
+                end, 
+                prev_hooks
+            )
+        elif enabled_lbw:
+            model, clip = LBWLoRALoader().load_lora(
+                model, 
+                clip, 
+                file, 
+                strength_model, 
+                strength_clip, 
+                lbw, 
+            )
+        else:
+            model, clip = LoraLoader().load_lora(
+                model, 
+                clip, 
+                file, 
+                strength_model, 
+                strength_clip
+            )
+    
+    model = model.clone()
+    clip = clip.clone()
+    
+    # Hookを適用
+    hooks = prev_hooks
+    if hooks is not None:
+        clip.apply_hooks_to_conds = hooks
+        clip.patcher.forced_hooks = hooks.clone()
+        clip.use_clip_schedule = True
+        clip.patcher.register_all_hook_patches(hooks, comfy.hooks.create_target_dict(comfy.hooks.EnumWeightTarget.Clip))
 
     return (model, clip)
 
@@ -130,10 +170,10 @@ class JupoLoRALoader:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "model": Field.model()
+                "model": Field.model(), 
+                "clip": Field.clip(), 
             }, 
             "optional": {
-                "clip": Field.clip(), 
                 "prev_stack": ("LORASTACK", {}), 
                 "prev_trigger": Field.string(forceInput=True)
             }, 
@@ -167,9 +207,9 @@ class ApplyLoRAStack:
         return {
             "required": {
                 "model": Field.model(), 
+                "clip": Field.clip(), 
             }, 
             "optional": {
-                "clip": Field.clip(), 
                 "stack": ("LORASTACK", {})
             }
         }

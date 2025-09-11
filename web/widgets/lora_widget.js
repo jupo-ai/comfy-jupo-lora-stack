@@ -36,6 +36,9 @@ export class PowerLoRACompoundWidget extends BaseWidget {
             model_type: null, 
             block: null, 
 
+            start: 0, 
+            end: 1, 
+
             ...valueOptions
         };
         
@@ -293,6 +296,10 @@ export class PowerLoRACompoundWidget extends BaseWidget {
         }
         if (this.value.enabled_block) {
             prefix += "📊";
+            textColor = "#f6ad55";
+        }
+        if (this.value.start > 0 || this.value.end < 1) {
+            prefix += "⏰";
             textColor = "#f6ad55";
         }
         // ウィジェット自体が無効の場合

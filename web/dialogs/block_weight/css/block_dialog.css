@@ -163,6 +163,13 @@ Block Weight Dialog
     border: none;
     border-radius: 8px;
     padding: 2px;
+    color: #e2e8f0;
+    font-size: 14px;
+    width: 50px; /* 数値入力の幅を調整 */
+}
+.jupo-block-dialog-number-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(104, 211, 145, 0.4);
 }
 
 
@@ -341,4 +348,71 @@ Block Weight Dialog
 
 .jupo-block-dialog-bimo-button:active {
     transform: translateY(0);
+}
+
+/* 
+-------------------------------------------------
+スケジュールデュアルつまみスライダー
+-------------------------------------------------
+*/
+
+.jupo-block-dialog-dual-slider-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+}
+
+.jupo-block-dialog-dual-slider-track {
+    position: relative;
+    width: 100%;
+    height: 8px; /* トラックの高さ */
+    background: #4a5568;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 8px; /* ラベルとのスペース */
+}
+
+.jupo-block-dialog-dual-slider-fill {
+    position: absolute;
+    height: 100%;
+    background: linear-gradient(90deg, #68d391 0%, #48bb78 100%);
+    border-radius: 4px;
+}
+
+.jupo-block-dialog-dual-slider-thumb {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(145deg, #ffffff 0%, #f7fafc 100%);
+    border: 2px solid #48bb78;
+    border-radius: 50%;
+    cursor: grab;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.jupo-block-dialog-dual-slider-thumb:active {
+    cursor: grabbing;
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 4px 12px rgba(104, 211, 145, 0.4);
+}
+
+.jupo-block-dialog-dual-slider-thumb-start {
+    /* JavaScriptでleftを制御 */
+    z-index: 2; /* 手前に表示 */
+}
+
+.jupo-block-dialog-dual-slider-thumb-end {
+    /* JavaScriptでleftを制御 */
+    z-index: 2; /* 手前に表示 */
+}
+
+.jupo-block-dialog-dual-slider-number-inputs {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
 }
