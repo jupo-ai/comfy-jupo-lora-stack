@@ -65,7 +65,7 @@ def get_stack(unique_id=None, extra_pnginfo=None, lora_list_str="") -> tuple[lis
     return (stack, trigger)
 
 
-def apply_stack(stack, model: ModelPatcher, clip: CLIP):
+def apply_stack(stack, model: ModelPatcher=None, clip: CLIP=None):
     available_loras = get_available_loras(stack)
     prev_hooks = None
     
@@ -182,9 +182,9 @@ class JupoLoRALoader:
         return {
             "required": {
                 "model": Field.model(), 
-                "clip": Field.clip(), 
             }, 
             "optional": {
+                "clip": Field.clip(), 
                 "prev_stack": ("LORASTACK", {}), 
                 "prev_trigger": Field.string(forceInput=True), 
                 "lora_list": Field.string(multiline=True), 
@@ -219,9 +219,9 @@ class ApplyLoRAStack:
         return {
             "required": {
                 "model": Field.model(), 
-                "clip": Field.clip(), 
             }, 
             "optional": {
+                "clip": Field.clip(), 
                 "stack": ("LORASTACK", {})
             }
         }
