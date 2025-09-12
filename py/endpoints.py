@@ -10,7 +10,7 @@ import time
 import mimetypes
 import uuid
 from urllib.parse import urlparse, unquote
-import tqdm
+from tqdm import tqdm
 import aiofiles
 import base64
 import glob
