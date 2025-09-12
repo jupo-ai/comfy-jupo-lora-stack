@@ -9,6 +9,7 @@ from comfy.sd import CLIP
 import comfy.hooks
 import os
 from pathlib import Path
+import json
 
 
 def get_available_loras(stack: list[dict]) -> list[dict]:
@@ -27,19 +28,27 @@ def get_available_loras(stack: list[dict]) -> list[dict]:
     return available_loras
 
 
-def get_stack(unique_id=None, extra_pnginfo=None) -> tuple[list[dict], dict]:
-    if not (unique_id and extra_pnginfo):
-        print("unique_id, extra_pnginfo are None")
-        return ([], "")
-    
+def get_stack(unique_id=None, extra_pnginfo=None, lora_list_str="") -> tuple[list[dict], dict]:
+
     lora_list = []
-    nodes = extra_pnginfo.get("workflow", {}).get("nodes", [])
-    for node in nodes:
-        if str(node.get("id")) == str(unique_id):
-            lora_list = node.get("lora_list", [])
-            lora_list = [lora for lora in lora_list if lora.get("enabled")]
-            for lora in lora_list:
-                lora["lora"] = str(Path(lora.get("lora"))) # パス形式を統一
+    try:
+        nodes = extra_pnginfo.get("workflow").get("nodes")
+        for node in nodes:
+            if (str(node.get("id")) == str(unique_id)):
+                lora_list = node.get("lora_list")
+    except Exception as e:
+        print(f"Failed to load LoRA-List from extra_pnginfo: {e}")
+    
+    # extra_pnginfoから取得したlora_listが空の場合、JSON形式のlora_listから取得を試みる
+    if not lora_list:
+        try:
+            lora_list = json.loads(lora_list_str)
+        except Exception as e:
+            print(f"Failed to load LoRA-List from JSON string: {e}")
+    
+    # lora_list = [lora for lora in lora_list if lora.get("enabled")]
+    for lora in lora_list:
+        lora["lora"] = str(Path(lora.get("lora"))) # パス形式を統一
     
     stack = []
     trigger = ""
@@ -141,7 +150,8 @@ class JupoLoRAStack:
             "required": {}, 
             "optional": {
                 "prev_stack": ("LORASTACK", {}),
-                "prev_trigger": Field.string(forceInput=True)
+                "prev_trigger": Field.string(forceInput=True), 
+                "lora_list": Field.string(multiline=True), 
             }, 
             "hidden": {
                 "unique_id": "UNIQUE_ID",
@@ -153,8 +163,8 @@ class JupoLoRAStack:
     RETURN_NAMES = ("stack", "trigger")
     FUNCTION = "execute"
     
-    def execute(self, prev_stack=[], prev_trigger="", unique_id=None, extra_pnginfo=None):
-        stack, trigger = get_stack(unique_id, extra_pnginfo)
+    def execute(self, prev_stack=[], prev_trigger="", unique_id=None, extra_pnginfo=None, lora_list=""):
+        stack, trigger = get_stack(unique_id, extra_pnginfo, lora_list)
 
         stack = prev_stack + stack
         trigger = prev_trigger + trigger
@@ -175,7 +185,8 @@ class JupoLoRALoader:
             }, 
             "optional": {
                 "prev_stack": ("LORASTACK", {}), 
-                "prev_trigger": Field.string(forceInput=True)
+                "prev_trigger": Field.string(forceInput=True), 
+                "lora_list": Field.string(multiline=True), 
             }, 
             "hidden": {
                 "unique_id": "UNIQUE_ID",
@@ -187,8 +198,8 @@ class JupoLoRALoader:
     RETURN_NAMES = ("MODEL", "CLIP", "trigger")
     FUNCTION = "execute"
     
-    def execute(self, model, clip=None, prev_stack=[], prev_trigger="", unique_id=None, extra_pnginfo=None):
-        stack, trigger = get_stack(unique_id, extra_pnginfo)
+    def execute(self, model, clip=None, prev_stack=[], prev_trigger="", unique_id=None, extra_pnginfo=None, lora_list=""):
+        stack, trigger = get_stack(unique_id, extra_pnginfo, lora_list)
         stack = prev_stack + stack
         trigger = prev_trigger + trigger
         

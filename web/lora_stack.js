@@ -70,6 +70,12 @@ const extension = {
 
         nodeType.prototype.onNodeCreated = function() {
             const result = originalOnNodeCreated?.apply(this, arguments);
+
+            // lora_list入力を非表示にする
+            const loraListWidget = this.widgets.find(w => w.name === "lora_list");
+            if (loraListWidget) {
+                loraListWidget.type = "hidden";
+            }
             
             this.loraCounter = 0;
             this.loraWidgets = [];
@@ -80,6 +86,15 @@ const extension = {
             this.updateNodeSize();
             
             return result;
+        };
+
+        // lora_listの値を隠しフィールドのセット
+        nodeType.prototype.updateLoraListValue = function() {
+            const loraListWidget = this.widgets.find(w => w.name === "lora_list");
+            if (loraListWidget) {
+                const loraList = this.loraWidgets.map(widget => widget.value);
+                loraListWidget.value = JSON.stringify(loraList);
+            }
         };
 
         nodeType.prototype.serialize = function() {
@@ -113,7 +128,8 @@ const extension = {
                     widget.value = widgetData; // 保存されていた値で上書き
                 });
             }
-
+            
+            this.updateLoraListValue();
             this.updateNodeSize();
             return result;
         };
@@ -151,7 +167,8 @@ const extension = {
                 strength_model: 1.0,
                 strength_clip: 1.0,
                 clip_mode: this.clipSettingMode === 'individual',
-                deleteCallback: (widget) => this.removeLoRAWidget(widget)
+                deleteCallback: (widget) => this.removeLoRAWidget(widget), 
+                valueChangedCallback: () => this.updateLoraListValue(), 
             });
 
             this.loraWidgets.push(loraWidget);
@@ -160,6 +177,7 @@ const extension = {
             const spacerIndex = this.widgets.findIndex(w => w.name === "spacerBottom");
             this.widgets.splice(spacerIndex, 0, loraWidget);
 
+            this.updateLoraListValue();
             this.updateNodeSize();
             return loraWidget;
         };
@@ -172,12 +190,13 @@ const extension = {
                 if (widgetIndex !== -1) {
                     this.widgets.splice(widgetIndex, 1);
                 }
+                this.updateLoraListValue();
                 this.updateNodeSize();
             }
         };
 
         nodeType.prototype.clearAllWidgets = function() {
-            this.widgets = [];
+            this.widgets = this.widgets.filter(w => w.name === "lora_list");
             this.loraWidgets = [];
         };
 

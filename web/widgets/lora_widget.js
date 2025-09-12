@@ -16,8 +16,9 @@ export class PowerLoRACompoundWidget extends BaseWidget {
         this.haveMouseMovedNumber = false;
         this.haveMouseMovedClipNumber = false;
         
-        const { deleteCallback, ...valueOptions } = options;
+        const { deleteCallback, valueChangedCallback, ...valueOptions } = options;
         this.deleteCallback = deleteCallback;
+        this.valueChangedCallback = valueChangedCallback;
 
         this._value = {
             enabled: true,
@@ -66,7 +67,12 @@ export class PowerLoRACompoundWidget extends BaseWidget {
                 delete newValue.strength;
             }
             this._value = { ...this._value, ...newValue };
+            this.valueChangedCallback?.();
         }
+    }
+
+    serializeValue(node, index) {
+        return this.value;
     }
     
     setupHitAreas() {
@@ -365,6 +371,7 @@ export class PowerLoRACompoundWidget extends BaseWidget {
     
     onToggleClick(event, pos, node) {
         this.value.enabled = !this.value.enabled;
+        this.valueChangedCallback?.();
         this.cancelMouseDown();
         node.setDirtyCanvas(true, true);
         return true;
@@ -375,6 +382,7 @@ export class PowerLoRACompoundWidget extends BaseWidget {
         
         Utils.showLoRAChooser(event, this.value.lora, (selectedLora) => {
             this.value.lora = selectedLora;
+            this.valueChangedCallback?.();
             node.setDirtyCanvas(true, true);
         });
         
@@ -389,6 +397,7 @@ export class PowerLoRACompoundWidget extends BaseWidget {
             const num = parseFloat(v);
             if (!isNaN(num)) {
                 this.value.strength_model = Math.round(num * 100) / 100;
+                this.valueChangedCallback?.();
                 node.setDirtyCanvas(true, true);
             }
         }, event);
@@ -402,6 +411,7 @@ export class PowerLoRACompoundWidget extends BaseWidget {
             this.haveMouseMovedNumber = true;
             const newValue = this.value.strength_model + event.deltaX * CONSTANTS.DRAG_SENSITIVITY;
             this.value.strength_model = Math.round(newValue * 100) / 100;
+            this.valueChangedCallback?.();
             node.setDirtyCanvas(true, true);
         }
         return true;
@@ -410,6 +420,7 @@ export class PowerLoRACompoundWidget extends BaseWidget {
     onStrengthDecrease(event, pos, node) {
         if (!this.value.enabled) return;
         this.value.strength_model = Math.round((this.value.strength_model - CONSTANTS.STEP_SIZE) * 100) / 100;
+        this.valueChangedCallback?.();
         node.setDirtyCanvas(true, true);
         return true;
     }
@@ -417,6 +428,7 @@ export class PowerLoRACompoundWidget extends BaseWidget {
     onStrengthIncrease(event, pos, node) {
         if (!this.value.enabled) return;
         this.value.strength_model = Math.round((this.value.strength_model + CONSTANTS.STEP_SIZE) * 100) / 100;
+        this.valueChangedCallback?.();
         node.setDirtyCanvas(true, true);
         return true;
     }
@@ -428,6 +440,7 @@ export class PowerLoRACompoundWidget extends BaseWidget {
             const num = parseFloat(v);
             if (!isNaN(num)) {
                 this.value.strength_clip = Math.round(num * 100) / 100;
+                this.valueChangedCallback?.();
                 node.setDirtyCanvas(true, true);
             }
         }, event);
@@ -441,6 +454,7 @@ export class PowerLoRACompoundWidget extends BaseWidget {
             this.haveMouseMovedClipNumber = true;
             const newValue = this.value.strength_clip + event.deltaX * CONSTANTS.DRAG_SENSITIVITY;
             this.value.strength_clip = Math.round(newValue * 100) / 100;
+            this.valueChangedCallback?.();
             node.setDirtyCanvas(true, true);
         }
         return true;
@@ -449,6 +463,7 @@ export class PowerLoRACompoundWidget extends BaseWidget {
     onClipStrengthDecrease(event, pos, node) {
         if (!this.value.enabled) return;
         this.value.strength_clip = Math.round((this.value.strength_clip - CONSTANTS.STEP_SIZE) * 100) / 100;
+        this.valueChangedCallback?.();
         node.setDirtyCanvas(true, true);
         return true;
     }
@@ -456,6 +471,7 @@ export class PowerLoRACompoundWidget extends BaseWidget {
     onClipStrengthIncrease(event, pos, node) {
         if (!this.value.enabled) return;
         this.value.strength_clip = Math.round((this.value.strength_clip + CONSTANTS.STEP_SIZE) * 100) / 100;
+        this.valueChangedCallback?.();
         node.setDirtyCanvas(true, true);
         return true;
     }
