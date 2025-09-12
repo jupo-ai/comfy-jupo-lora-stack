@@ -59,6 +59,9 @@ def get_stack(unique_id=None, extra_pnginfo=None) -> tuple[list[dict], dict]:
 def apply_stack(stack, model: ModelPatcher, clip: CLIP):
     available_loras = get_available_loras(stack)
     prev_hooks = None
+    
+    model = model.clone()
+    clip = clip.clone()
         
     for value in available_loras:
         enabled = value.get("enabled", False)
@@ -115,9 +118,6 @@ def apply_stack(stack, model: ModelPatcher, clip: CLIP):
                 strength_model, 
                 strength_clip
             )
-    
-    model = model.clone()
-    clip = clip.clone()
     
     # Hookを適用
     hooks = prev_hooks
