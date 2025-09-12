@@ -58,19 +58,17 @@ class LBWLoRALoader:
             return (model, clip)
         
         lora = self.prepare_lora(lora_name)
-
-        model = model.clone()
-        clip = clip.clone()
-        
         loaded, model_mapped, clip_mapped = self.create_lbw_info(model, clip, lora, lbw)
 
         for key, value in loaded.items():
             patch = {key: value}
             strength_patch_model = strength_model * model_mapped.get(key, 1)
             strength_patch_clip = strength_clip * clip_mapped.get(key, 1)
-
-            model.add_patches(patch, strength_patch_model)
-            clip.patcher.add_patches(patch, strength_patch_clip)
+            
+            if model:
+                model.add_patches(patch, strength_patch_model)
+            if clip:
+                clip.patcher.add_patches(patch, strength_patch_clip)
         
         return (model, clip)
     
@@ -87,10 +85,6 @@ class LBWLoRALoader:
             return prev_hooks
         
         lora = self.prepare_lora(lora_name)
-
-        # 念のため、model, clipをclone
-        model = model.clone()
-        clip = clip.clone()
         
         # LBW
         hooks_lbw = self.create_lbw_hook(model, clip, lora, strength_model, strength_clip, lbw)
@@ -146,7 +140,7 @@ class LBWLoRALoader:
         return (loaded, model_mapped, clip_mapped)
     
     
-    def mapping_block_info(self, block_info, lora_key_map):
+    def mapping_block_info(self, block_info: dict, lora_key_map: dict):
         normalized = {}
 
         internal_keys = list(lora_key_map.values())

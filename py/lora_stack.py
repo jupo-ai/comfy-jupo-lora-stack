@@ -69,8 +69,8 @@ def apply_stack(stack, model: ModelPatcher, clip: CLIP):
     available_loras = get_available_loras(stack)
     prev_hooks = None
     
-    model = model.clone()
-    clip = clip.clone()
+    model = model.clone() if model else None
+    clip = clip.clone() if clip else None
         
     for value in available_loras:
         enabled = value.get("enabled", False)
@@ -131,10 +131,11 @@ def apply_stack(stack, model: ModelPatcher, clip: CLIP):
     # Hookを適用
     hooks = prev_hooks
     if hooks is not None:
-        clip.apply_hooks_to_conds = hooks
-        clip.patcher.forced_hooks = hooks.clone()
-        clip.use_clip_schedule = True
-        clip.patcher.register_all_hook_patches(hooks, comfy.hooks.create_target_dict(comfy.hooks.EnumWeightTarget.Clip))
+        if clip is not None:
+            clip.apply_hooks_to_conds = hooks
+            clip.patcher.forced_hooks = hooks.clone()
+            clip.use_clip_schedule = True
+            clip.patcher.register_all_hook_patches(hooks, comfy.hooks.create_target_dict(comfy.hooks.EnumWeightTarget.Clip))
 
     return (model, clip)
 
