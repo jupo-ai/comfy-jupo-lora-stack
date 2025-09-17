@@ -4,6 +4,7 @@ import { $el } from "../../scripts/ui.js";
 import { mk_name, mk_endpoint, api_get, api_post, loadCSS } from "./utils.js";
 
 import { LoRAExplorer } from "./dialogs/lora_explorer.js";
+import { CheckpointExplorer } from "./dialogs/checkpoint_exproloer.js";
 
 // === 定数定義 ===
 export const CONSTANTS = {
@@ -63,19 +64,20 @@ export const Utils = {
         }
     },
 
+    //  --- LoRA ファイル選択ダイアログ --------------------
+    useExplorer: true, // 設定にて変更可能
+
     async getLoRAs() {
         const apiLoras = await api_get("files/loras");
         return [...(Array.isArray(apiLoras) ? apiLoras : [])];
     },
-
-    useExplorer: true, // 設定にて変更可能
 
     async showLoRAChooser(event, currentValue, callback) {
         // ファイルリストを取得
         const fileList = await this.getLoRAs();
 
         if (this.useExplorer) {
-            this.showCustomMenu(event, fileList, currentValue, callback);
+            this.showCustomLoRAMenu(event, fileList, currentValue, callback);
         } else {
             this.showDefaultMenu(event, fileList, currentValue, callback);
         }
@@ -86,10 +88,8 @@ export const Utils = {
 
         new LiteGraph.ContextMenu(fileList, {
             event: event,
-            title: "LoRAを選択",
             scale: Math.max(1, app.canvas.ds?.scale ?? 1),
             className: "dark",
-            filter: false,
             callback: (value) => {
                 if (typeof value === "string") {
                     callback(value);
@@ -99,13 +99,38 @@ export const Utils = {
     }, 
     
     // custom
-    async showCustomMenu(event, fileList, currentValue, callback) {
+    async showCustomLoRAMenu(event, fileList, currentValue, callback) {
 
         new LoRAExplorer(callback).show({
             fileList: fileList, 
             currentValue: currentValue
         });
-    }
+    }, 
+
+    // --- Checkpoint ファイル選択ダイアログ ---------------
+    async getCheckpoints() {
+        const apiCheckpoints = await api_get("files/checkpoints");
+        return [...(Array.isArray(apiCheckpoints) ? apiCheckpoints : [])];
+    }, 
+
+    async showCheckpointChooser(event, currentValue, callback) {
+        const fileList = await this.getCheckpoints();
+
+        if (this.useExplorer) {
+            this.showCustomCheckpointMenu(event, fileList, currentValue, callback);
+        } else {
+            this.showDefaultMenu(event, fileList, currentValue, callback);
+        }
+    }, 
+
+    async showCustomCheckpointMenu(event, fileList, currentValue, callback) {
+
+        new CheckpointExplorer(callback).show({
+            fileList: fileList, 
+            currentValue: currentValue
+        });
+    }, 
+
 };
 
 

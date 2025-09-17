@@ -201,8 +201,7 @@ export class FileExplorer extends BaseDialog {
         }
         parentElement.appendChild(ul);
     }
-
-    // --- 新しいプライベートメソッド ---
+    
     openTreeToPath(path) {
         let elementToActivate = this.treeContainer.querySelector('.jupo-file-explorer-directory-item'); // デフォルトはルート
         if (path === ".") {

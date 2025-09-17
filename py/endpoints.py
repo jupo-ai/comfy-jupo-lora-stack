@@ -14,6 +14,7 @@ from tqdm import tqdm
 import aiofiles
 import base64
 import glob
+import time
 
 
 # ===============================================
@@ -21,7 +22,7 @@ import glob
 # ===============================================
 # --- ファイルのリストを取得
 @Endpoint.get("files/{dir}")
-async def get_lora_files(req: web.Request):
+async def get_files(req: web.Request):
     directory = req.match_info["dir"]
     filename_list = folder_paths.get_filename_list(directory)
     
@@ -29,27 +30,30 @@ async def get_lora_files(req: web.Request):
 
 
 # --- モデルのフルパスを取得
-def get_fullpath(name: str):
-    pos = name.index("/")
-    folder, name = name[:pos], name[pos+1:]
+def get_fullpath(path: str):
+    pos = path.index("/")
+    folder, file = path[:pos], path[pos+1:]
 
-    full_path = folder_paths.get_full_path(folder, name)
+    full_path = folder_paths.get_full_path(folder, file)
     return full_path
 
 
 # --- モデルのmetadataを取得
-@Endpoint.get("metadata/{name}")
+@Endpoint.get("metadata/{path}")
 async def load_metadata(req: web.Request):
-    name = req.match_info["name"]
-    file_path = get_fullpath(name)
+    path = req.match_info["path"]
+    file_path = get_fullpath(path)
 
     if not file_path:
         return web.json_response({})
     
+    start = time.time()
     try:
         metadata = get_metadata(file_path)
     except:
         metadata = {}
+    elapsed = time.time() - start
+    print(f"メタデータ取得完了: {elapsed:.4f}秒")
     
     return web.json_response(metadata)
 
@@ -72,10 +76,10 @@ def get_metadata(filepath):
 
 
 # --- Civitaiから情報を取得
-@Endpoint.get("civitai/{name}")
+@Endpoint.get("civitai/{path}")
 async def load_civitai_info(req: web.Request):
-    name = req.match_info["name"]
-    file_path = get_fullpath(name)
+    path = req.match_info["path"]
+    file_path = get_fullpath(path)
 
     if not file_path:
         return web.json_response({})
@@ -91,16 +95,18 @@ async def load_civitai_info(req: web.Request):
     
     else:
         # civitai API から取得
-        with open(file_path, mode="rb") as file:
-            file_hash = hashlib.sha256(file.read()).hexdigest()
+        file_hash = get_hash(file_path)
         
         url = f"https://civitai.com/api/v1/model-versions/by-hash/{file_hash}"
 
-        # 非同期でAPIリクエスト
+        # APIリクエスト
+        info_start = time.time()
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:
                 if response.status == 200:
                     info = await response.json()
+        info_elapsed = time.time() - info_start
+        print(f"Civitaiデータ取得完了: {info_elapsed:.4f}秒")
         
         # infoファイルを保存
         with open(info_file, mode="w", encoding="utf-8") as file:
@@ -108,6 +114,34 @@ async def load_civitai_info(req: web.Request):
         
     
     return web.json_response(info)
+
+
+def get_hash(file_path: str):
+    start = time.time()
+    chunk_size = 8 * 1024 * 1024
+    try:
+        # blake3使用可能時
+        from blake3 import blake3
+        hasher = blake3()
+        with open(file_path, "rb") as f:
+            for chunk in iter(lambda: f.read(chunk_size), b""):
+                hasher.update(chunk)
+        file_hash = hasher.hexdigest()
+    
+    except:
+        # hashlibで
+        sha256 = hashlib.sha256()
+        with open(file_path, "rb") as file:
+            for chunk in iter(lambda: file.read(chunk_size), b""):
+                sha256.update(chunk)
+        file_hash = sha256.hexdigest()
+    
+    elapsed = time.time() - start
+    print(f"ハッシュ取得完了: {elapsed:.2f}秒")
+
+    return file_hash
+    
+
 
         
 # --- 同フォルダからプレビューメディアを取得
@@ -128,13 +162,14 @@ def cleanup_expired_tokens():
     
     return len(expired_tokens)
 
-@Endpoint.get("preview/{name}")
+
+@Endpoint.get("preview/{path}")
 async def get_preview_media(req: web.Request):
     res = {"path": None, "cate": None, "token": None}
     
     try:
-        name = req.match_info["name"]
-        file_path = get_fullpath(name)
+        path = req.match_info["path"]
+        file_path = get_fullpath(path)
         
         if not file_path:
             return web.json_response(res)

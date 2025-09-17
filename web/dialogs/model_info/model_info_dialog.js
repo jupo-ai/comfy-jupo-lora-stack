@@ -25,6 +25,7 @@ export class ModelInfoDialog extends BaseDialog {
         // 継承クラスでオーバーライド
         this.modelPath = null;
         this.modelDir = null;
+        this.forceDisableTrigger = false;
 
         // 各セクション
         this.metadataSection = null;
@@ -239,7 +240,7 @@ export class ModelInfoDialog extends BaseDialog {
         this.displayCivitai();
         this.previewSection.display(this.dataManager.preview);
         this.gallerySection.display(this.dataManager.civitai.images);
-        this.triggerSection.display(this.dataManager.civitai.trainedWords);
+        this.triggerSection.display(this.dataManager.civitai.trainedWords, this.forceDisableTrigger);
     }
 
     // --- metadata

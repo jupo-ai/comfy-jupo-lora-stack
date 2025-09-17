@@ -15,6 +15,7 @@ export class TriggerSection {
         this.buttons = null;
         this.textarea = null;
         this.overlay = null;
+        this.forceDisable = false;
 
         this.createElements();
         this.bindEvents();
@@ -57,7 +58,11 @@ export class TriggerSection {
     // オーバーレイの状態を更新
     // ------------------------------------------
     updateOverlayState() {
-        this.overlay.style.display = this.widget ? "none" : "flex";
+        if (this.forceDisable) {
+            this.overlay.style.display = "flex";
+        } else {
+            this.overlay.style.display = this.widget ? "none" : "flex";
+        }
     }
 
     // ------------------------------------------
@@ -82,12 +87,19 @@ export class TriggerSection {
     // ------------------------------------------
     saveState() {
         if (!this.widget) return;
-        this.widget.value = {
-            ...this.widget.value,
-            enabled_trigger: this.switchInput.checked,
-            trigger: this.textarea.value
-        };
+
+        const val = this.widget.value;
+        if (typeof val !== "object" || val === null) return;
+
+        if (Object.hasOwn(val, 'enabled_trigger') && Object.hasOwn(val, 'trigger')) {
+            this.widget.value = {
+                ...val,
+                enabled_trigger: this.switchInput.checked,
+                trigger: this.textarea.value
+            };
+        }
     }
+
 
     // ------------------------------------------
     // テキストエリアにワードを挿入
@@ -119,12 +131,13 @@ export class TriggerSection {
     // ------------------------------------------
     // トリガーワードを表示 & 状態を復元
     // ------------------------------------------
-    display(trainedWords) {
+    display(trainedWords, forceDisable = false) {
+        this.forceDisable = forceDisable;
         this.clearButtons();
         this.updateOverlayState();
 
         // widget.valueから状態を復元
-        if (this.widget && this.widget.value) {
+        if (this.widget && this.widget.value && typeof this.widget.value === "object") {
             this.switchInput.checked = this.widget.value.enabled_trigger ?? false;
             this.textarea.value = this.widget.value.trigger ?? "";
         }

@@ -1,7 +1,6 @@
 import { app } from "../../scripts/app.js";
-import { api } from "../../scripts/api.js";
-import { $el } from "../../scripts/ui.js";
-import { mk_name, mk_endpoint, api_get, api_post, loadCSS } from "./utils.js";
+import { mk_name } from "./utils.js";
+import { applyContextMenuPatch } from "./context_menu_patch.js";
 
 import { CONSTANTS, Utils, Renderer } from "./ui.js";
 import { settings } from "./settings.js";
@@ -12,40 +11,6 @@ import { PowerLoRACompoundWidget } from "./widgets/lora_widget.js";
 
 
 const classNames = [mk_name("LoRA_Stack_(jupo)"), mk_name("LoRA_Loader_(jupo)")];
-
-// ==============================================
-// コンテキストメニューパッチ
-// ==============================================
-let contextMenuPatched = false;
-
-function applyContextMenuPatch() {
-    if (contextMenuPatched) {
-        return;
-    }
-    contextMenuPatched = true;
-
-    const canvasPrototype = app.canvas.constructor.prototype;
-    const orig_processContextMenu = canvasPrototype.processContextMenu;
-
-    canvasPrototype.processContextMenu = function(node, e) {
-        // LoRA Stackノードかどうかをチェック
-        if (node && classNames.includes(node.constructor.comfyClass)) {
-            const canvas_pos = this.convertEventToCanvasOffset(e);
-            const node_pos = [canvas_pos[0] - node.pos[0], canvas_pos[1] - node.pos[1]];
-
-            // LoRAウィジェット領域内をクリックしたかチェック
-            const clickedWidget = node.getClickedLoRAWidget(node_pos[0], node_pos[1]);
-            if (clickedWidget) {
-                // カスタムコンテキストメニューを表示（ウィジェット側で処理）
-                clickedWidget.showContextMenu(e, node);
-                return; // オリジナルメニューを阻止
-            }
-        }
-
-        // 条件に合わない場合は、オリジナルのコンテキストメニューを表示
-        return orig_processContextMenu.apply(this, arguments);
-    };
-}
 
 
 // ==============================================
@@ -58,7 +23,7 @@ const extension = {
 
     init: async function(app) {
         // コンテキストメニューパッチを適用
-        applyContextMenuPatch();
+        applyContextMenuPatch(classNames);
     },
 
     beforeRegisterNodeDef: async function(nodeType, nodeData, app) {
@@ -208,7 +173,7 @@ const extension = {
         };
 
         // ===== コンテキストメニュー関連メソッド =====
-        nodeType.prototype.getClickedLoRAWidget = function(x, y) {
+        nodeType.prototype.getClickedWidget = function(x, y) {
             for (const widget of this.widgets) {
                 if (widget instanceof PowerLoRACompoundWidget) {
                     // ウィジェット側のメソッドを使用してクリック判定（nodeを引数で渡す）
