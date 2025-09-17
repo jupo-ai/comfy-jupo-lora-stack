@@ -111,7 +111,7 @@ async def load_civitai_info(req: web.Request):
         # infoファイルを保存
         with open(info_file, mode="w", encoding="utf-8") as file:
             json.dump(info, file, ensure_ascii=False, indent=4)
-        
+        print("Civitaiデータを保存しました")
     
     return web.json_response(info)
 
@@ -276,8 +276,11 @@ def _remove_old_previews(model_path_no_ext, current_full_path):
     existing_previews = glob.glob(f"{model_path_no_ext}.*")
     for old_preview in existing_previews:
         if old_preview != current_full_path:
-            print(f"Remove old preview: {old_preview}")
-            os.remove(old_preview)
+            # jsonは削除しない
+            ext = os.path.splitext(old_preview)[1]
+            if not ext == ".json":
+                print(f"Remove old preview: {old_preview}")
+                os.remove(old_preview)
 
 async def _save_uploaded_file(save_path, file_payload):
     print(f"Saving uploaded preview to: {save_path}")
