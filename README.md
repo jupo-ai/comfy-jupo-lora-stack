@@ -2,6 +2,14 @@
 
 <img src="https://files.catbox.moe/6g9nt4.png" height=400>
 
+## Install
+1. custom_nodesフォルダにリポジトリクローン  
+   `git clone https://github.com/jupo-ai/comfy-jupo-lora-stack`
+2. requirements.txtをインストール  
+   `pip install -r comfy-jupo-lora-stack/requirements.txt`
+
+
+## 機能
 LoRAをスタック形式で読み込みます  
 以下の機能があります
 
@@ -45,3 +53,7 @@ LoRAをスタック形式で読み込みます
 ### スケジュール(start, end)
 - 上記LBW画面からスケジュールを設定できます
 - start, endをそれぞれ 0 ~ 1 の範囲で設定します
+
+### Checkpoint Loader
+- 通常のCheckpoint Loaderと同等です。
+- ファイル選択用のカスタムエクスプローラを使用できます
