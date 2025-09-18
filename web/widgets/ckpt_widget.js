@@ -54,7 +54,8 @@ export function customize(widget) {
         if (x > width - 40) return this.incrementValue({ e, node, canvas });
 
         Utils.showCheckpointChooser(e, this.value, (selected) => {
-            this.setValue(selected, { e, node, canvas });
+            const file = selected.replaceAll("/", "\\"); // サーバー側のパスに合わせる
+            this.setValue(file, { e, node, canvas });
         });
 
         return true;
