@@ -3,6 +3,7 @@ from server import PromptServer
 from typing import Union, Literal
 from comfy.comfy_types import IO
 import sys
+from enum import StrEnum
 
 author = "jupo"
 packageName = "LoRAStack"
@@ -290,5 +291,4 @@ class Field:
         data = {"default": default}
         data.update(kwargs)
         return Field._field(choices, data)
-
 

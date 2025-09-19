@@ -116,7 +116,16 @@ export class TriggerSection {
             }
         }
 
-        this.textarea.value = currentText + word + ", ";
+        let insertWord = word.trim();
+        if (insertWord) {
+            if (!insertWord.endsWith(",")) {
+                insertWord += ", ";
+            } else {
+                insertWord += " "
+            }
+        }
+
+        this.textarea.value = currentText + insertWord;
         this.textarea.focus();
         this.textarea.dispatchEvent(new Event('input', { bubbles: true }));
     }

@@ -10,6 +10,7 @@ NODE_CLASS_MAPPINGS = {
     mk_name("Stack_to_WanWrapper"): lora_stack.StackToWanWrapper, 
     
     mk_name("Checkpoint_Loader_(jupo)"): checkpoint_loader.JupoCheckpointLoader, 
+    mk_name("Checkpoint_Selector_(jupo)"): checkpoint_loader.JupoCheckpointSelector, 
 }
 
 set_default_category(NODE_CLASS_MAPPINGS)

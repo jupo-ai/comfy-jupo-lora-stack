@@ -378,7 +378,6 @@ export class PowerLoRACompoundWidget extends BaseWidget {
     }
     
     onLoRANameClick(event, pos, node) {
-        if (!this.value.enabled) return;
         
         Utils.showLoRAChooser(event, this.value.lora, (selectedLora) => {
             this.value.lora = selectedLora;
@@ -391,7 +390,7 @@ export class PowerLoRACompoundWidget extends BaseWidget {
     }
     
     onStrengthClick(event, pos, node) {
-        if (!this.value.enabled || this.haveMouseMovedNumber) return;
+        if (this.haveMouseMovedNumber) return;
         
         app.canvas.prompt("強度を入力", this.value.strength_model, (v) => {
             const num = parseFloat(v);
@@ -405,7 +404,6 @@ export class PowerLoRACompoundWidget extends BaseWidget {
     }
     
     onStrengthMove(event, pos, node) {
-        if (!this.value.enabled) return;
         
         if (event.deltaX) {
             this.haveMouseMovedNumber = true;
@@ -418,7 +416,6 @@ export class PowerLoRACompoundWidget extends BaseWidget {
     }
     
     onStrengthDecrease(event, pos, node) {
-        if (!this.value.enabled) return;
         this.value.strength_model = Math.round((this.value.strength_model - CONSTANTS.STEP_SIZE) * 100) / 100;
         this.valueChangedCallback?.();
         node.setDirtyCanvas(true, true);
@@ -426,7 +423,6 @@ export class PowerLoRACompoundWidget extends BaseWidget {
     }
     
     onStrengthIncrease(event, pos, node) {
-        if (!this.value.enabled) return;
         this.value.strength_model = Math.round((this.value.strength_model + CONSTANTS.STEP_SIZE) * 100) / 100;
         this.valueChangedCallback?.();
         node.setDirtyCanvas(true, true);
@@ -434,7 +430,7 @@ export class PowerLoRACompoundWidget extends BaseWidget {
     }
 
     onClipStrengthClick(event, pos, node) {
-        if (!this.value.enabled || this.haveMouseMovedClipNumber) return;
+        if (this.haveMouseMovedClipNumber) return;
         
         app.canvas.prompt("Clip強度を入力", this.value.strength_clip, (v) => {
             const num = parseFloat(v);
@@ -448,7 +444,6 @@ export class PowerLoRACompoundWidget extends BaseWidget {
     }
 
     onClipStrengthMove(event, pos, node) {
-        if (!this.value.enabled) return;
         
         if (event.deltaX) {
             this.haveMouseMovedClipNumber = true;
@@ -461,7 +456,6 @@ export class PowerLoRACompoundWidget extends BaseWidget {
     }
 
     onClipStrengthDecrease(event, pos, node) {
-        if (!this.value.enabled) return;
         this.value.strength_clip = Math.round((this.value.strength_clip - CONSTANTS.STEP_SIZE) * 100) / 100;
         this.valueChangedCallback?.();
         node.setDirtyCanvas(true, true);
@@ -469,7 +463,6 @@ export class PowerLoRACompoundWidget extends BaseWidget {
     }
 
     onClipStrengthIncrease(event, pos, node) {
-        if (!this.value.enabled) return;
         this.value.strength_clip = Math.round((this.value.strength_clip + CONSTANTS.STEP_SIZE) * 100) / 100;
         this.valueChangedCallback?.();
         node.setDirtyCanvas(true, true);
