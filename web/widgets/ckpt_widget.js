@@ -277,7 +277,7 @@ export class PowerCheckpointCompoundWidget extends BaseWidget {
                 }
             }, 
             {
-                content: `📝 表示: ${node.loraDisplayMode === 'full' ? 'ファイル名のみ' : 'フルパス'}`,
+                content: `📝 表示: ${node.displayMode === 'full' ? 'ファイル名のみ' : 'フルパス'}`,
                 callback: () => {
                     node.displayMode = node.displayMode === "full" ? "filename" : "full";
                     node.setDirtyCanvas(true);

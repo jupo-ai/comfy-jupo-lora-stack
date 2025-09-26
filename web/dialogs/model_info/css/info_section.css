@@ -6,14 +6,14 @@ Info Section - Refined Design
 
 /* --- 全体コンテナ --- */
 .jupo-info-section {
-    background: #1a202c; /* 背景色を統一 */
-    padding: 20px; /* 余白を広めに */
-    border-radius: 12px; /* 角丸をちょい強く */
-    border-left: 4px solid #48bb78; /* アクセントを少し太く */
+    background: #1a202c;
+    padding: 20px;
+    border-radius: 12px;
+    border-left: 4px solid #48bb78;
     display: flex;
     flex-direction: column;
-    gap: 16px; /* 隙間を広げた */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* 影を追加 */
+    gap: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 
@@ -22,35 +22,35 @@ Info Section - Refined Design
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-bottom: 12px; /* 下に余白 */
-    border-bottom: 1px solid #2d3748; /* 区切り線 */
+    padding-bottom: 12px;
+    border-bottom: 1px solid #2d3748;
 }
 
 .jupo-info-section-header-title {
     color: #68d391;
-    font-size: 16px; /* 文字を大きく */
-    font-weight: 700; /* 太くした */
+    font-size: 16px;
+    font-weight: 700;
     letter-spacing: 1px;
-    text-transform: uppercase; /* 大文字でオシャレに */
+    text-transform: uppercase;
 }
 
 .jupo-info-section-header-button {
     font-size: 14px;
-    width: 32px; /* 正方形にした */
+    width: 32px;
     height: 32px;
-    background: #2d3748; /* ボタンの背景色 */
+    background: #2d3748;
     border: 0;
-    border-radius: 50%; /* 丸くした！ */
+    border-radius: 50%;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
-    display: flex; /* 絵文字を中央揃え */
+    display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .jupo-info-section-header-button:hover {
     background: #4a5568;
-    transform: scale(1.1) rotate(10deg); /* ちょい回転させてカワイイ */
+    transform: scale(1.1) rotate(10deg);
 }
 
 
@@ -58,7 +58,7 @@ Info Section - Refined Design
 .jupo-info-section-item-container {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* アイテム間の隙間 */
+    gap: 10px;
 }
 
 .jupo-info-section-item {
@@ -74,10 +74,10 @@ Info Section - Refined Design
 .jupo-info-section-label {
     color: #a0aec0;
     font-weight: 600;
-    width: 130px; /* ちょい幅調整 */
+    width: 130px;
     flex-shrink: 0;
     word-break: break-all;
-    border-right: 1px solid #4a5568; /* 区切り線の色を調整 */
+    border-right: 1px solid #4a5568;
 }
 
 .jupo-info-section-value {

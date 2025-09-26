@@ -16,14 +16,17 @@ LoRAをスタック形式で読み込みます
 ### カスタムエクスプローラ
 - オリジナルのLoRA選択GUIを提供します
 - 設定からOFFにできます
+- ![sample](https://files.catbox.moe/nfp8n5.png)
 
 ### Civitai情報
 - LoRA右クリック -> `情報を開く`を選択するとCivitaiから情報を取得します
+- ![sample](https://files.catbox.moe/9mobnn.png)
 
 ### トリガーワード設定
 - 上のCivitai情報画面でトリガーワードを設定できます
 - デフォルトではOFFなので必要なLoRAにて設定してください
 - trigger出力にて連結して出力されます
+- ![sample](https://files.catbox.moe/kr0wxm.png)
 
 ### プレビュー
 - 上のCivitai情報画面でプレビューを設定できます
@@ -33,6 +36,7 @@ LoRAをスタック形式で読み込みます
 - LoRAを右クリック -> `Clipを個別設定`
 - MODELとCLIPの強度を別々に設定できます
 - 再び`CLIPを共通設定`にするとMODELとCLIPを共に設定します
+- ![sample](https://files.catbox.moe/fuvl05.png)
 
 ### 表示名を設定
 - LoRAを右クリック -> `表示名を設定`
@@ -42,6 +46,7 @@ LoRAをスタック形式で読み込みます
 ### Stack to WanWrapper
 - stackをKijai氏のWanVideo Wrapperのlora形式に変換するノードです
 - ~~blockなどは全部にまとめて設定することになります~~ LBWで設定できるようになりました
+- ![sample](https://files.catbox.moe/er4jai.png)
 
 ### LoRA Block Weight
 - LoRA右クリック -> `LBWを開く`を選択するとLBW設定用のGUIが表示されます
@@ -49,6 +54,7 @@ LoRAをスタック形式で読み込みます
 - ブロックはフルブロック相当で記載してあります(Lycoris等とUIを統合するため)
 - BIMO構文が使えます
 - FLUX, WANはU-netではないのでinput, ouputがあるわけではないですが、UIの都合上、ブロックをU-netのように左右に分けています
+- ![sample](https://files.catbox.moe/3ou2ha.png)
 
 ### スケジュール(start, end)
 - 上記LBW画面からスケジュールを設定できます

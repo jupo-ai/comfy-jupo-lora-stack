@@ -176,9 +176,9 @@ async def get_preview_media(req: web.Request):
 
         # メディア候補
         SUPPORTED_EXTENSIONS = {
-        "image": ["jpg", "jpeg", "bmp", "png", "webp", "gif"],
-        "video": ["mp4", "webm"],
-        "audio": ["mp3", "ogg", "wav"]
+            "image": ["jpg", "jpeg", "bmp", "png", "webp", "gif"],
+            "video": ["mp4", "webm"],
+            "audio": ["mp3", "ogg", "wav"]
         }
         file_no_ext = os.path.splitext(file_path)[0]
 
